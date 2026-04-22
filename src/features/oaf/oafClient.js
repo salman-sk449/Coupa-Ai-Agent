@@ -4,7 +4,7 @@
 
 import { initOAFInstance } from "@coupa/open-assistant-framework-client";
 import config from "./oafConfig";
-import { STATUSES } from "./oafConstants";
+import { STATUSES, CONFIG_PROPS } from "./oafConstants";
 
 // --- safe event emitter for standalone mode ---
 const createNoopEmitter = () => ({
@@ -101,10 +101,11 @@ export const navigatePath = async (path) =>
   callOaf(async () => {
     const normalized = normalizePath(path);
 
-    // Instead of using OAF navigation, navigate the parent window directly
+    // Instead of using OAF navigation, navigate the parent window directly to the full Coupa URL
     try {
-      window.parent.location.href = normalized;
-      return { status: "success", message: "Navigated parent window to " + normalized };
+      const fullUrl = `${CONFIG_PROPS.HOST_URLS.HTTPS_PROTOCOL}${config.coupahost}${normalized}`;
+      window.parent.location.href = fullUrl;
+      return { status: "success", message: "Navigated parent window to " + fullUrl };
     } catch (e) {
       return failure(`Failed to navigate parent window: ${e.message}`, e);
     }

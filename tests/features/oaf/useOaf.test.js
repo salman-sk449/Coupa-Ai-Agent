@@ -79,7 +79,7 @@ describe('useOaf', () => {
     oafEvents.mockReturnValue(mockOafEvents);
     oafExecuteAction.mockImplementation(fn => fn());
     handleOAFResizeOperation.mockResolvedValue();
-    navigatePath.mockImplementation((path) => Promise.resolve({ status: "success", message: `Navigated parent window to ${path}` }));
+    navigatePath.mockImplementation((path) => Promise.resolve({ status: "success", message: `Navigated parent window to https://test.coupahost.com${path}` }));
     jest.clearAllMocks();
   });
 
