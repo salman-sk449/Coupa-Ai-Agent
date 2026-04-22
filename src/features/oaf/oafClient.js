@@ -101,24 +101,14 @@ export const navigatePath = async (path) =>
   callOaf(async () => {
     const normalized = normalizePath(path);
 
-    // Try { path } signature first
+    // Instead of using OAF navigation, navigate the parent window directly
     try {
-      const r = await oafApp.navigateToPath({ path: normalized });
-      if (r != null) return r;
-      // Host returned void → try string signature
-      const r2 = await oafApp.navigateToPath(normalized);
-      return r2 ?? { status: "noop", message: "Host returned no body (string signature)" };
-    } catch (eObj) {
-      // Object call failed → try string
-      try {
-        const r2 = await oafApp.navigateToPath(normalized);
-        return r2 ?? { status: "noop", message: "Host returned no body (string signature)" };
-      } catch (eStr) {
-        // Expose both errors so we can see which signature the host rejects
-        throw { objectSignatureError: eObj, stringSignatureError: eStr, sentPath: normalized };
-      }
+      window.parent.location.href = normalized;
+      return { status: "success", message: "Navigated parent window to " + normalized };
+    } catch (e) {
+      return failure(`Failed to navigate parent window: ${e.message}`, e);
     }
-  }, "navigateToPath");
+  }, "navigatePath");
 
 // ====== WINDOW MANAGEMENT (prove permissions) ======
 export const setSize = async (height, width) =>
