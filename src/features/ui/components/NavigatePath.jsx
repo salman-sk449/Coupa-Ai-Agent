@@ -20,13 +20,18 @@ const NavigatePath = () => {
   };
 
   // Trigger navigation and update response state
-  const handleAction = async () => {
+  const handleAction = () => {
     if (!navigatePath) {
       setNavigateResponse(ERROR_MESSAGES.INVALID_NAVIGATE_PATH);
       return;
     }
-    const response = await oafNavigatePath(navigatePath);
-    setNavigateResponse(response.message);
+
+    const BASE_URL = "https://ey-in-demo.coupacloud.com";
+    const normalizedInput = navigatePath.trim().replace(/\/+/g, "/");
+    const fullUrl = `${BASE_URL}${normalizedInput.startsWith("/") ? normalizedInput : `/${normalizedInput}`}`;
+
+    // Direct full-page redirect to the desired Coupa URL
+    window.location.href = fullUrl;
   };
 
   return (
